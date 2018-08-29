@@ -75,9 +75,9 @@ def plot_confusion_matrix(cm, classes, normalize=False, title='Confusion matrix'
     plt.imshow(cm, interpolation='nearest', cmap=cmap)
     plt.title(title)
     plt.colorbar()
-    tick_marks = np.arange(len(classes))
-    plt.xticks(tick_marks, classes, rotation=45)
-    plt.yticks(tick_marks, classes)
+    # tick_marks = np.arange(len(classes))
+    # plt.xticks(tick_marks, classes, rotation=45)
+    # plt.yticks(tick_marks, classes)
 
     fmt = '.2f' if normalize else 'd'
     thresh = cm.max() / 2.
@@ -112,7 +112,7 @@ def main():
     target = run_mapping(mapping, target)
 
     print('eval SVM')
-    print('Accuracy: {}'.format(clf.score(feature_test, target)))
+    #print('Accuracy: {}'.format(clf.score(feature_test, target)))
 
     prediction = clf.predict(feature_test)
 
@@ -120,14 +120,39 @@ def main():
     cnf_matrix = confusion_matrix(target, prediction)
     np.set_printoptions(precision=2)
 
+    inv_mapping = {v: k for k, v in mapping.items()}
+
     # Plot non-normalized confusion matrix
-    plt.figure()
+    plt.figure(figsize=(12, 12))
     plot_confusion_matrix(cnf_matrix, classes=mapping.keys(), title='Confusion matrix, without normalization')
 
     # Plot normalized confusion matrix
-    plt.figure()
+    plt.figure(figsize=(12, 12))
     plot_confusion_matrix(cnf_matrix, classes=mapping.keys(), normalize=True, title='Normalized confusion matrix')
 
+    plt.figure(figsize=(12, 6))
+
+    plt.title('prediction')
+    label_map = [inv_mapping[x] for x in range(len(mapping))]
+
+    tick_marks = np.arange(len(label_map))
+
+    plt.hist(prediction, bins=tick_marks)
+    plt.xticks(tick_marks, label_map, rotation=45)
+
+    plt.tick_params(axis='both', which='major', labelsize=6)
+    plt.tick_params(axis='both', which='minor', labelsize=6)
+
+    plt.figure(figsize=(12, 6))
+    plt.title('target')
+    label_map = [inv_mapping[x] for x in range(len(mapping))]
+    tick_marks = np.arange(len(label_map))
+
+    plt.hist(target, bins=tick_marks)
+    plt.xticks(tick_marks, label_map, rotation=45)
+
+    plt.tick_params(axis='both', which='major', labelsize=6)
+    plt.tick_params(axis='both', which='minor', labelsize=6)
     plt.show()
 
 
