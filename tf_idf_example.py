@@ -29,6 +29,8 @@ def main():
     with open(args.input_path, 'r') as json_f:
         for line in json_f:
             data_dict = json.loads(line)
+
+            print(data_dict['text_origin'])
             text.append(data_dict['text_origin'])
             school.append(data_dict['school'])
             year.append(data_dict['year'])
